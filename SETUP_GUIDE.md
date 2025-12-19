@@ -6,8 +6,8 @@
 
 ```bash
 # Cloner le projet
-git clone https://github.com/username/assistant-can2025.git
-cd assistant-can2025
+git clone https://github.com/anasakhssas/Assistant-IA-CAN-2025-LLM-RAG-Football-Agent.git
+cd Assistant-IA-CAN-2025-LLM-RAG-Football-Agent
 
 # Créer environnement virtuel
 python -m venv venv
