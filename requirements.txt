@@ -19,6 +19,7 @@ huggingface-hub>=0.19.3
 # Data Processing
 pandas==2.2.0
 numpy==1.26.3
+requests==2.31.0
 
 # NLP & Sentiment Analysis
 transformers==4.37.2
@@ -31,3 +32,8 @@ streamlit==1.31.0
 requests==2.31.0
 pydantic==2.6.0
 pydantic-settings==2.1.0
+
+# Testing
+pytest==7.4.4
+pytest-cov==4.1.0
+pytest-asyncio==0.21.1

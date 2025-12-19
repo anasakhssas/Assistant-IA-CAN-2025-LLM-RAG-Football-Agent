@@ -1,25 +1,25 @@
-team_id,team_name,group,fifa_rank,confederation,coach,titles
-1,Maroc,A,13,CAF,Walid Regragui,1
-2,Zambie,A,88,CAF,Avram Grant,0
-3,RD Congo,A,64,CAF,Sébastien Desabre,0
-4,Tanzanie,A,110,CAF,Adel Amrouche,0
-5,Sénégal,B,18,CAF,Aliou Cissé,1
-6,Gambie,B,128,CAF,Tom Saintfiet,0
-7,Cameroun,B,51,CAF,Rigobert Song,5
-8,Guinée,B,79,CAF,Kaba Diawara,0
-9,Égypte,C,36,CAF,Rui Vitória,7
-10,Ghana,C,60,CAF,Chris Hughton,4
-11,Cap-Vert,C,73,CAF,Bubista,0
-12,Mozambique,C,108,CAF,Chiquinho Conde,0
-13,Nigeria,D,40,CAF,José Peseiro,3
-14,Guinée équatoriale,D,93,CAF,Juan Micha,0
-15,Côte d'Ivoire,D,49,CAF,Jean-Louis Gasset,3
-16,Guinée-Bissau,D,106,CAF,Baciro Candé,0
-17,Algérie,E,37,CAF,Djamel Belmadi,2
-18,Angola,E,120,CAF,Pedro Gonçalves,0
-19,Burkina Faso,E,61,CAF,Hubert Velud,0
-20,Mauritanie,E,102,CAF,Amir Abdou,0
-21,Tunisie,F,28,CAF,Jalel Kadri,1
-22,Mali,F,53,CAF,Éric Chelle,0
-23,Afrique du Sud,F,66,CAF,Hugo Broos,1
-24,Namibie,F,115,CAF,Collin Benjamin,0
+team_id,team_name,group,fifa_rank,confederation,coach,titles,qualification
+1,Maroc,TBD,13,CAF,Walid Regragui,1,Pays hôte
+2,Sénégal,TBD,20,CAF,Aliou Cissé,1,Qualifié
+3,Égypte,TBD,36,CAF,Rui Vitória,7,Qualifié
+4,Algérie,TBD,37,CAF,Djamel Belmadi,2,Qualifié
+5,Nigeria,TBD,42,CAF,José Peseiro,3,Qualifié
+6,Tunisie,TBD,47,CAF,Jalel Kadri,1,Qualifié
+7,Cameroun,TBD,49,CAF,Rigobert Song,5,Qualifié
+8,Côte d'Ivoire,TBD,52,CAF,Jean-Louis Gasset,3,Champion en titre
+9,Mali,TBD,53,CAF,Éric Chelle,0,Qualifié
+10,Burkina Faso,TBD,60,CAF,Hubert Velud,0,Qualifié
+11,Ghana,TBD,64,CAF,Chris Hughton,4,Qualifié
+12,Afrique du Sud,TBD,66,CAF,Hugo Broos,1,Qualifié
+13,RD Congo,TBD,67,CAF,Sébastien Desabre,0,Qualifié
+14,Guinée,TBD,77,CAF,Kaba Diawara,0,Qualifié
+15,Zambie,TBD,87,CAF,Avram Grant,0,Qualifié
+16,Gabon,TBD,84,CAF,Patrice Neveu,0,Qualifié
+17,Angola,TBD,120,CAF,Pedro Gonçalves,0,Qualifié
+18,Mozambique,TBD,108,CAF,Chiquinho Conde,0,Qualifié
+19,Tanzanie,TBD,110,CAF,Adel Amrouche,0,Qualifié
+20,Zimbabwe,TBD,121,CAF,Baltemar Brito,0,Qualifié
+21,Ouganda,TBD,90,CAF,Paul Put,0,Qualifié
+22,Bénin,TBD,96,CAF,Gernot Rohr,0,Qualifié
+23,Botswana,TBD,140,CAF,Didier Gomes Da Rosa,0,Qualifié
+24,Soudan,TBD,125,CAF,James Kwesi Appiah,0,Qualifié

@@ -2,12 +2,6 @@
 
 Un chatbot intelligent pour la Coupe d'Afrique des Nations 2025. Posez des questions sur les matchs, les équipes, l'historique et obtenez des résumés automatiques.
 
-Ce projet utilise un LLM (Groq) et une base vectorielle (ChromaDB) pour des réponses précises et contextualisées.
-
-## ✨ Démo
-
-![Screenshot](https://via.placeholder.com/800x400?text=Demo+Screenshot)
-
 ## Fonctionnalités
 
 - **Chatbot Q&A** - Répondez à vos questions sur la CAN 2025
@@ -198,24 +192,8 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 
 ## 👤 Auteur
 
-Développé dans le cadre du projet CAN 2025 – SBI Africa
+Akhssas Anas
 
-## 🙏 Remerciements
+## 📄 License
 
-- [Groq](https://groq.com/) pour l'API LLM gratuite
-- [ChromaDB](https://www.trychroma.com/) pour la base vectorielle
-- [FastAPI](https://fastapi.tiangolo.com/) et [Streamlit](https://streamlit.io/)
-- La communauté open source
-
-## 📞 Support
-
-Pour toute question ou problème:
-- 📧 Ouvrez une [issue](https://github.com/username/assistant-can2025/issues)
-- 📖 Consultez la [documentation](SETUP_GUIDE.md)
-- License
-
-MIT
-
-## Auteur
-
-Projet CAN 2025 – SBI Africa
+MIT License - Copyright (c) 2025 [Votre Nom]

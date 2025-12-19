@@ -1,13 +1,16 @@
 """
 Pipeline RAG (Retrieval-Augmented Generation) pour l'Assistant IA CAN 2025
 Ce module gère le stockage vectoriel et la récupération contextuelle de documents
-"""
+Auteur: [Votre Nom]
+Projet: CAN 2025 - SBI Africa
+Date: Décembre 2025"""
 
 import os
 from typing import List, Dict, Optional
 import chromadb
 from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
+import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -172,53 +175,238 @@ class RAGPipeline:
 def initialize_can2025_knowledge():
     """
     Fonction utilitaire pour initialiser la base de connaissances CAN 2025
-    avec des données d'exemple
+    avec TOUTES les vraies données depuis les fichiers CSV et markdown
     """
     rag = RAGPipeline()
+    documents = []
     
-    # Données d'exemple sur la CAN
-    sample_documents = [
-        {
-            "id": "can2025_info",
-            "text": """La Coupe d'Afrique des Nations 2025 se déroule au Maroc du 21 décembre 2025 
-            au 18 janvier 2026. C'est la 35e édition de cette compétition. 24 équipes participent, 
-            réparties en 6 groupes de 4 équipes.""",
-            "metadata": {"type": "info_generale", "source": "officiel"}
-        },
-        {
-            "id": "equipes_favorites",
-            "text": """Les équipes favorites pour la CAN 2025 incluent le Sénégal (champion en titre), 
-            l'Égypte, le Maroc (pays hôte), l'Algérie, le Nigeria et la Côte d'Ivoire. 
-            Ces équipes ont des joueurs évoluant dans les plus grands championnats européens.""",
-            "metadata": {"type": "equipes", "source": "analyse"}
-        },
-        {
-            "id": "format_competition",
-            "text": """Le format de la compétition: phase de groupes (6 groupes de 4), 
-            puis phase à élimination directe avec huitièmes de finale, quarts, demi-finales et finale. 
-            Les deux premiers de chaque groupe se qualifient, ainsi que les 4 meilleurs troisièmes.""",
-            "metadata": {"type": "reglement", "source": "officiel"}
-        },
-        {
-            "id": "historique_maroc",
-            "text": """Le Maroc a remporté la CAN en 1976. Le pays a également été demi-finaliste 
-            en 2004. C'est la deuxième fois que le Maroc organise la CAN après 1988.""",
-            "metadata": {"type": "historique", "source": "archives"}
-        },
-        {
-            "id": "historique_senegal",
-            "text": """Le Sénégal a remporté sa première CAN en 2022 au Cameroun, battant l'Égypte 
-            aux tirs au but. Les Lions de la Teranga ont également été finalistes en 2019.""",
-            "metadata": {"type": "historique", "source": "archives"}
-        }
-    ]
+    # Chemin vers les données
+    data_dir = os.path.join(os.path.dirname(__file__), '..', 'data')
+    
+    print("🔄 Chargement de TOUTES les données CAN 2025...\n")
+    
+    # 1. Charger les matchs depuis matches.csv
+    try:
+        matches_file = os.path.join(data_dir, 'matches.csv')
+        if os.path.exists(matches_file):
+            df_matches = pd.read_csv(matches_file)
+            
+            for idx, match in df_matches.iterrows():
+                text = f"""Match {match['match_id']}: {match['team_a']} vs {match['team_b']}
+Date: {match['date']} à {match['time']}
+Stade: {match['stadium']}, {match['city']}
+Phase: {match['stage']}
+Score: {match['team_a']} {match.get('score_a', '')} - {match.get('score_b', '')} {match['team_b']}
+Statut: {match['status']}
+{match.get('notes', '')}"""
+                
+                documents.append({
+                    "id": f"match_{match['match_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "match",
+                        "match_id": str(match['match_id']),
+                        "date": str(match['date']),
+                        "stage": str(match['stage'])
+                    }
+                })
+            print(f"✓ {len(df_matches)} matchs chargés")
+    except Exception as e:
+        print(f"⚠ Erreur matchs: {e}")
+    
+    # 2. Charger les équipes depuis teams.csv
+    try:
+        teams_file = os.path.join(data_dir, 'teams.csv')
+        if os.path.exists(teams_file):
+            df_teams = pd.read_csv(teams_file)
+            
+            for idx, team in df_teams.iterrows():
+                text = f"""Équipe: {team['team_name']}
+Groupe: {team['group']}
+Classement FIFA: {team.get('fifa_rank', 'N/A')}
+Entraîneur: {team.get('coach', 'N/A')}
+Titres CAN: {team.get('titles', 0)}
+Confédération: {team['confederation']}
+Qualification: {team.get('qualification', 'Qualifié')}"""
+                
+                documents.append({
+                    "id": f"team_{team['team_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "equipe",
+                        "team_name": team['team_name'],
+                        "group": str(team['group'])
+                    }
+                })
+            print(f"✓ {len(df_teams)} équipes chargées")
+    except Exception as e:
+        print(f"⚠ Erreur équipes: {e}")
+    
+    # 3. Charger le classement depuis standings.csv
+    try:
+        standings_file = os.path.join(data_dir, 'standings.csv')
+        if os.path.exists(standings_file):
+            df_standings = pd.read_csv(standings_file)
+            
+            for idx, standing in df_standings.iterrows():
+                text = f"""Classement {standing['group']}: {standing['team_name']}
+Position: {standing['rank']}
+Points: {standing['points']}
+Matchs joués: {standing['played']}
+Victoires: {standing['won']} | Nuls: {standing['draw']} | Défaites: {standing['lost']}
+Buts pour: {standing['goals_for']} | Buts contre: {standing['goals_against']}
+Différence de buts: {standing['goal_diff']}"""
+                
+                documents.append({
+                    "id": f"standing_{standing['team_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "classement",
+                        "team_name": standing['team_name'],
+                        "group": standing['group']
+                    }
+                })
+            print(f"✓ {len(df_standings)} classements chargés")
+    except Exception as e:
+        print(f"⚠ Erreur classements: {e}")
+    
+    # 4. Charger les meilleurs buteurs depuis top_scorers.csv
+    try:
+        scorers_file = os.path.join(data_dir, 'top_scorers.csv')
+        if os.path.exists(scorers_file):
+            df_scorers = pd.read_csv(scorers_file)
+            
+            for idx, scorer in df_scorers.iterrows():
+                text = f"""Buteur: {scorer['player_name']} ({scorer['nationality']})
+Équipe: {scorer['team']}
+Âge: {scorer['age']} ans
+Buts: {scorer['goals']}
+Passes décisives: {scorer['assists']}
+Matchs joués: {scorer['matches_played']}
+Minutes jouées: {scorer['minutes_played']}"""
+                
+                documents.append({
+                    "id": f"scorer_{scorer['player_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "buteur",
+                        "player_name": scorer['player_name'],
+                        "team": scorer['team']
+                    }
+                })
+            print(f"✓ {len(df_scorers)} buteurs chargés")
+    except Exception as e:
+        print(f"⚠ Erreur buteurs: {e}")
+    
+    # 5. Charger les meilleurs passeurs depuis top_assists.csv
+    try:
+        assists_file = os.path.join(data_dir, 'top_assists.csv')
+        if os.path.exists(assists_file):
+            df_assists = pd.read_csv(assists_file)
+            
+            for idx, assister in df_assists.iterrows():
+                text = f"""Passeur: {assister['player_name']} ({assister['nationality']})
+Équipe: {assister['team']}
+Âge: {assister['age']} ans
+Passes décisives: {assister['assists']}
+Buts: {assister['goals']}
+Matchs joués: {assister['matches_played']}"""
+                
+                documents.append({
+                    "id": f"assist_{assister['player_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "passeur",
+                        "player_name": assister['player_name'],
+                        "team": assister['team']
+                    }
+                })
+            print(f"✓ {len(df_assists)} passeurs chargés")
+    except Exception as e:
+        print(f"⚠ Erreur passeurs: {e}")
+    
+    # 6. Charger les statistiques des équipes depuis team_statistics.csv
+    try:
+        team_stats_file = os.path.join(data_dir, 'team_statistics.csv')
+        if os.path.exists(team_stats_file):
+            df_team_stats = pd.read_csv(team_stats_file)
+            
+            for idx, stats in df_team_stats.iterrows():
+                text = f"""Statistiques de {stats['team_name']}
+Matchs joués: {stats['matches_played']}
+Victoires: {stats['wins']} | Nuls: {stats['draws']} | Défaites: {stats['losses']}
+Buts marqués: {stats['goals_for']}
+Buts encaissés: {stats['goals_against']}
+Clean sheets: {stats['clean_sheets']}
+Matchs sans marquer: {stats['failed_to_score']}"""
+                
+                documents.append({
+                    "id": f"stats_{stats['team_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "statistiques_equipe",
+                        "team_name": stats['team_name']
+                    }
+                })
+            print(f"✓ {len(df_team_stats)} statistiques équipes chargées")
+    except Exception as e:
+        print(f"⚠ Erreur stats équipes: {e}")
+    
+    # 7. Charger les stades depuis venues.csv
+    try:
+        venues_file = os.path.join(data_dir, 'venues.csv')
+        if os.path.exists(venues_file):
+            df_venues = pd.read_csv(venues_file)
+            
+            for idx, venue in df_venues.iterrows():
+                text = f"""Stade: {venue['stadium_name']}
+Ville: {venue['city']}
+Pays: {venue['country']}
+Capacité: {venue.get('capacity', 'N/A')} places"""
+                
+                documents.append({
+                    "id": f"venue_{idx}",
+                    "text": text,
+                    "metadata": {
+                        "type": "stade",
+                        "stadium_name": venue['stadium_name'],
+                        "city": venue['city']
+                    }
+                })
+            print(f"✓ {len(df_venues)} stades chargés")
+    except Exception as e:
+        print(f"⚠ Erreur stades: {e}")
+    
+    # 8. Charger l'historique depuis can_historique.md
+    try:
+        history_file = os.path.join(data_dir, 'history', 'can_historique.md')
+        if os.path.exists(history_file):
+            with open(history_file, 'r', encoding='utf-8') as f:
+                history_content = f.read()
+            
+            # Diviser en sections
+            sections = history_content.split('##')
+            for i, section in enumerate(sections):
+                if section.strip():
+                    documents.append({
+                        "id": f"historique_{i}",
+                        "text": section.strip(),
+                        "metadata": {
+                            "type": "historique",
+                            "source": "can_historique.md"
+                        }
+                    })
+            print(f"✓ Historique CAN chargé")
+    except Exception as e:
+        print(f"⚠ Erreur historique: {e}")
     
     # Ajout des documents
-    rag.add_documents(sample_documents)
-    
-    # Affichage des stats
-    stats = rag.get_collection_stats()
-    print(f"\nStatistiques: {stats}")
+    if documents:
+        rag.add_documents(documents)
+        stats = rag.get_collection_stats()
+        print(f"\n✅ Base de connaissances complète: {stats['total_documents']} documents")
+    else:
+        print("⚠ Aucun document chargé")
     
     return rag
 
