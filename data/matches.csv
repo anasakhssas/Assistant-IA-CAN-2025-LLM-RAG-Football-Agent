@@ -1,0 +1,21 @@
+match_id,date,time,stage,team_a,team_b,stadium,city,score_a,score_b,status
+1,2025-12-21,17:00,Groupe A,Maroc,Zambie,Stade Mohammed V,Casablanca,2,0,completed
+2,2025-12-21,20:00,Groupe A,RD Congo,Tanzanie,Stade Prince Moulay Abdellah,Rabat,1,1,completed
+3,2025-12-22,17:00,Groupe B,Sénégal,Gambie,Stade de Marrakech,Marrakech,3,0,completed
+4,2025-12-22,20:00,Groupe B,Cameroun,Guinée,Stade Mohammed V,Casablanca,2,1,completed
+5,2025-12-23,17:00,Groupe C,Égypte,Ghana,Stade Ibn Batouta,Tanger,1,1,completed
+6,2025-12-23,20:00,Groupe C,Cap-Vert,Mozambique,Stade d'Agadir,Agadir,2,0,completed
+7,2025-12-24,17:00,Groupe D,Nigeria,Guinée équatoriale,Stade de Marrakech,Marrakech,4,1,completed
+8,2025-12-24,20:00,Groupe D,Côte d'Ivoire,Guinée-Bissau,Stade Prince Moulay Abdellah,Rabat,3,0,completed
+9,2025-12-25,17:00,Groupe E,Algérie,Angola,Stade Mohammed V,Casablanca,2,1,completed
+10,2025-12-25,20:00,Groupe E,Burkina Faso,Mauritanie,Stade Ibn Batouta,Tanger,1,0,completed
+11,2025-12-26,17:00,Groupe F,Tunisie,Mali,Stade de Marrakech,Marrakech,0,0,completed
+12,2025-12-26,20:00,Groupe F,Afrique du Sud,Namibie,Stade d'Agadir,Agadir,2,1,completed
+13,2025-12-27,17:00,Groupe A,Maroc,Tanzanie,Stade Prince Moulay Abdellah,Rabat,3,1,completed
+14,2025-12-27,20:00,Groupe A,RD Congo,Zambie,Stade Ibn Batouta,Tanger,2,2,completed
+15,2025-12-28,17:00,Groupe B,Sénégal,Cameroun,Stade Mohammed V,Casablanca,1,0,scheduled
+16,2025-12-28,20:00,Groupe B,Guinée,Gambie,Stade de Marrakech,Marrakech,,,scheduled
+17,2025-12-29,17:00,Groupe C,Égypte,Mozambique,Stade Prince Moulay Abdellah,Rabat,,,scheduled
+18,2025-12-29,20:00,Groupe C,Ghana,Cap-Vert,Stade d'Agadir,Agadir,,,scheduled
+19,2025-12-30,17:00,Groupe D,Nigeria,Côte d'Ivoire,Stade Ibn Batouta,Tanger,,,scheduled
+20,2025-12-30,20:00,Groupe D,Guinée-Bissau,Guinée équatoriale,Stade Mohammed V,Casablanca,,,scheduled
