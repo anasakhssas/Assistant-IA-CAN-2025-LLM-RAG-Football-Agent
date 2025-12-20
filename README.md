@@ -196,4 +196,4 @@ Akhssas Anas
 
 ## 📄 License
 
-MIT License - Copyright (c) 2025 [Votre Nom]
+MIT License - Copyright (c) 2025 Akhssas Anas
