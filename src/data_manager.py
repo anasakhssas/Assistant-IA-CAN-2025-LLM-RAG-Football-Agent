@@ -15,6 +15,7 @@ class DataManager:
         self.data_dir = DATA_DIR
         self.matches_file = self.data_dir / "matches.csv"
         self.teams_file = self.data_dir / "teams.csv"
+        self.players_file = self.data_dir / "players.csv"
         self.history_file = self.data_dir / "history" / "can_historique.md"
     
     def load_matches(self) -> Optional[pd.DataFrame]:
@@ -89,14 +90,81 @@ class DataManager:
             return matches.to_dict('records')
         return []
     
+    def load_players(self) -> Optional[pd.DataFrame]:
+        """Charge les joueurs depuis le CSV"""
+        try:
+            if self.players_file.exists():
+                df = pd.read_csv(self.players_file)
+                logger.info(f"✓ {len(df)} joueurs chargés")
+                return df
+            else:
+                logger.warning(f"Fichier {self.players_file} introuvable")
+                return None
+        except Exception as e:
+            logger.error(f"Erreur chargement joueurs: {e}")
+            return None
+    
+    def get_player_by_name(self, player_name: str) -> Optional[Dict]:
+        """Récupère un joueur par son nom"""
+        df = self.load_players()
+        if df is not None:
+            player = df[df['player_name'].str.lower() == player_name.lower()]
+            if not player.empty:
+                return player.iloc[0].to_dict()
+        return None
+    
+    def get_players_by_team(self, team_name: str) -> List[Dict]:
+        """Récupère tous les joueurs d'une équipe"""
+        df = self.load_players()
+        if df is not None:
+            players = df[df['team'].str.lower() == team_name.lower()]
+            return players.to_dict('records')
+        return []
+    
+    def get_players_by_position(self, position: str) -> List[Dict]:
+        """Récupère tous les joueurs d'un poste spécifique"""
+        df = self.load_players()
+        if df is not None:
+            players = df[df['position'].str.lower() == position.lower()]
+            return players.to_dict('records')
+        return []
+    
+    def get_top_scorers(self, limit: int = 10) -> List[Dict]:
+        """Récupère les meilleurs buteurs internationaux"""
+        df = self.load_players()
+        if df is not None:
+            top = df.nlargest(limit, 'goals_international')
+            return top.to_dict('records')
+        return []
+    
+    def get_most_valuable_players(self, limit: int = 10) -> List[Dict]:
+        """Récupère les joueurs avec la plus grande valeur marchande"""
+        df = self.load_players()
+        if df is not None:
+            top = df.nlargest(limit, 'market_value')
+            return top.to_dict('records')
+        return []
+    
+    def get_top_scorers_by_team(self, team_name: str, limit: int = 10) -> List[Dict]:
+        """Récupère les meilleurs buteurs d'une équipe spécifique"""
+        df = self.load_players()
+        if df is not None:
+            team_players = df[df['team'].str.lower() == team_name.lower()]
+            if not team_players.empty:
+                top = team_players.nlargest(limit, 'goals_international')
+                return top.to_dict('records')
+        return []
+    
     def get_stats(self) -> Dict:
         """Récupère les statistiques globales"""
         matches_df = self.load_matches()
         teams_df = self.load_teams()
+        players_df = self.load_players()
         
         stats = {
             'total_matches': len(matches_df) if matches_df is not None else 0,
             'total_teams': len(teams_df) if teams_df is not None else 0,
+            'total_players': len(players_df) if players_df is not None else 0,
             'completed_matches': 0,
             'upcoming_matches': 0
         }

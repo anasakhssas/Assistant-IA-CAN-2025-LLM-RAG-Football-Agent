@@ -68,12 +68,19 @@ class LLMInterface:
 Tu dois répondre aux questions sur:
 - Les matchs programmés et résultats
 - Les équipes participantes et compositions
-- Les joueurs et leurs statistiques
+- Les joueurs et leurs statistiques (âge, club, buts, valeur marchande, etc.)
 - L'historique de la CAN
 - Les stades et l'organisation
 
+IMPORTANT:
+- Utilise TOUJOURS les informations du contexte fourni pour répondre
+- Pour les questions de comparaison (meilleur, plus cher, etc.), analyse TOUS les joueurs dans le contexte
+- Les valeurs marchandes sont en euros (€)
+- Sois précis avec les chiffres (valeurs, buts, sélections)
+- Si tu dois comparer ou classer, cite tous les joueurs pertinents du contexte
+
 Réponds de manière précise, concise et professionnelle.
-Si tu ne connais pas une information, dis-le clairement."""
+Si tu ne connais pas une information qui n'est pas dans le contexte, dis-le clairement."""
 
         # Construction des messages
         messages = [{"role": "system", "content": system_prompt}]

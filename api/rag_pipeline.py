@@ -377,7 +377,38 @@ Capacité: {venue.get('capacity', 'N/A')} places"""
     except Exception as e:
         print(f"⚠ Erreur stades: {e}")
     
-    # 8. Charger l'historique depuis can_historique.md
+    # 8. Charger les joueurs depuis players.csv
+    try:
+        players_file = os.path.join(data_dir, 'players.csv')
+        if os.path.exists(players_file):
+            df_players = pd.read_csv(players_file)
+            
+            for idx, player in df_players.iterrows():
+                text = f"""Joueur: {player['player_name']} ({player['nationality']})
+Équipe: {player['team']}
+Poste: {player['position']}
+Âge: {player['age']} ans
+Taille: {player['height']} cm
+Club actuel: {player['club']}
+Buts internationaux: {player['goals_international']}
+Sélections: {player['caps']}
+Valeur marchande: {player['market_value']:,} €"""
+                
+                documents.append({
+                    "id": f"player_{player['player_id']}",
+                    "text": text,
+                    "metadata": {
+                        "type": "joueur",
+                        "player_name": player['player_name'],
+                        "team": player['team'],
+                        "position": player['position']
+                    }
+                })
+            print(f"✓ {len(df_players)} joueurs chargés")
+    except Exception as e:
+        print(f"⚠ Erreur joueurs: {e}")
+    
+    # 9. Charger l'historique depuis can_historique.md
     try:
         history_file = os.path.join(data_dir, 'history', 'can_historique.md')
         if os.path.exists(history_file):

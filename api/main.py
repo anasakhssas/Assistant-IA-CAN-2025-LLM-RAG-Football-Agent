@@ -15,6 +15,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.llm_interface import LLMInterface
 from api.rag_pipeline import RAGPipeline
+from src.data_manager import DataManager
 
 # Initialisation de l'application FastAPI
 app = FastAPI(
@@ -36,6 +37,7 @@ app.add_middleware(
 try:
     llm = LLMInterface(provider="groq")
     rag = RAGPipeline()
+    data_manager = DataManager()
     print("✅ Composants IA initialisés avec succès")
 except Exception as e:
     print(f"⚠️ Erreur d'initialisation: {e}")
@@ -43,6 +45,7 @@ except Exception as e:
     traceback.print_exc()
     llm = None
     rag = None
+    data_manager = None
 
 
 # ============= Modèles Pydantic =============
@@ -116,19 +119,72 @@ async def ask_question(request: ChatRequest):
         sources = None
         
         if request.use_rag and rag:
-            # Recherche de documents pertinents
-            retrieved_docs = rag.search(request.question, n_results=3)
+            # Déterminer le nombre de résultats selon la question
+            # Plus de résultats pour les questions sur les joueurs/équipes
+            question_lower = request.question.lower()
+            keywords_team = ['joueurs', 'équipe', 'composition', 'effectif', 'liste', 'roster', 'sélection']
+            keywords_comparison = ['cher', 'valeur', 'prix', 'meilleur', 'plus', 'top', 'classement']
             
-            if retrieved_docs:
-                context = rag.retrieve_context(request.question, n_results=3)
-                sources = [
-                    {
-                        "id": doc['id'],
-                        "text": doc['text'][:200] + "...",  # Extrait
-                        "metadata": doc.get('metadata', {})
-                    }
-                    for doc in retrieved_docs
-                ]
+            # Détection spéciale pour les questions sur la valeur/prix
+            if any(kw in question_lower for kw in ['cher', 'valeur', 'prix']) and data_manager:
+                # Utiliser directement la fonction get_most_valuable_players
+                top_players = data_manager.get_most_valuable_players(limit=10)
+                if top_players:
+                    # Créer un contexte structuré avec les joueurs les plus chers
+                    context_lines = ["Voici les joueurs les plus chers de la CAN 2025:\n"]
+                    for i, p in enumerate(top_players, 1):
+                        context_lines.append(f"{i}. {p['player_name']} ({p['team']}) - {p['club']}")
+                        context_lines.append(f"   Valeur marchande: {p['market_value']:,} €")
+                        context_lines.append(f"   Poste: {p['position']}, Âge: {p['age']} ans\n")
+                    context = "\n".join(context_lines)
+                    
+                    sources = [{"id": f"player_{p['player_id']}", 
+                               "text": f"{p['player_name']} - {p['market_value']:,} €",
+                               "metadata": {"type": "joueur", "player_name": p['player_name']}}
+                              for p in top_players[:5]]
+            
+            # Détection spéciale pour les meilleurs buteurs d'une équipe
+            elif any(kw in question_lower for kw in ['buteur', 'meilleur buteur', 'top buteur']) and data_manager:
+                # Extraire le nom de l'équipe
+                teams = ['maroc', 'sénégal', 'égypte', 'nigeria', 'cameroun', 'algérie', 'côte d\'ivoire', 
+                        'ghana', 'tunisie', 'mali', 'guinée', 'burkina faso']
+                team_found = next((t for t in teams if t in question_lower), None)
+                
+                if team_found:
+                    # Récupérer les meilleurs buteurs de cette équipe
+                    top_scorers = data_manager.get_top_scorers_by_team(team_found, limit=5)
+                    if top_scorers:
+                        context_lines = [f"Meilleurs buteurs de l'équipe {team_found.capitalize()}:\n"]
+                        for i, p in enumerate(top_scorers, 1):
+                            context_lines.append(f"{i}. {p['player_name']} - {p['goals_international']} buts internationaux")
+                            context_lines.append(f"   Club: {p['club']}, Poste: {p['position']}")
+                            context_lines.append(f"   Sélections: {p['caps']}, Âge: {p['age']} ans\n")
+                        context = "\n".join(context_lines)
+                        
+                        sources = [{"id": f"player_{p['player_id']}", 
+                                   "text": f"{p['player_name']} - {p['goals_international']} buts",
+                                   "metadata": {"type": "joueur", "player_name": p['player_name']}}
+                                  for p in top_scorers[:3]]
+            
+            # Sinon, utiliser la recherche RAG normale
+            if not context:
+                # Utiliser 10 résultats si la question porte sur des joueurs/équipes ou des comparaisons
+                n_results = 10 if (any(kw in question_lower for kw in keywords_team) or 
+                                 any(kw in question_lower for kw in keywords_comparison)) else 3
+            
+                # Recherche de documents pertinents
+                retrieved_docs = rag.search(request.question, n_results=n_results)
+                
+                if retrieved_docs:
+                    context = rag.retrieve_context(request.question, n_results=n_results)
+                    sources = [
+                        {
+                            "id": doc['id'],
+                            "text": doc['text'][:200] + "...",  # Extrait
+                            "metadata": doc.get('metadata', {})
+                        }
+                        for doc in retrieved_docs
+                    ]
         
         # Génération de la réponse
         answer = llm.chat(request.question, context=context)

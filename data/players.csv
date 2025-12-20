@@ -1,0 +1,61 @@
+player_id,player_name,team,position,age,nationality,height,goals_international,caps,club,market_value
+1,Achraf Hakimi,Maroc,Défenseur,26,Marocaine,181,9,73,Paris SG,65000000
+2,Hakim Ziyech,Maroc,Milieu offensif,30,Marocaine,180,17,49,Galatasaray,15000000
+3,Youssef En-Nesyri,Maroc,Attaquant,27,Marocaine,189,21,58,Fenerbahçe,25000000
+4,Sofyan Amrabat,Maroc,Milieu défensif,28,Marocaine,185,4,65,Manchester United,25000000
+5,Yassine Bounou,Maroc,Gardien,33,Marocaine,192,0,52,Al-Hilal,15000000
+6,Noussair Mazraoui,Maroc,Défenseur,27,Marocaine,183,3,34,Bayern Munich,30000000
+7,Romain Saïss,Maroc,Défenseur,34,Marocaine,190,6,81,Al-Shabab,5000000
+8,Sadio Mané,Sénégal,Attaquant,32,Sénégalaise,175,38,97,Al-Nassr,40000000
+9,Édouard Mendy,Sénégal,Gardien,32,Sénégalaise,197,0,31,Al-Ahli,18000000
+10,Kalidou Koulibaly,Sénégal,Défenseur,33,Sénégalaise,187,4,74,Al-Hilal,25000000
+11,Idrissa Gueye,Sénégal,Milieu défensif,34,Sénégalaise,174,3,101,Everton,8000000
+12,Ismaïla Sarr,Sénégal,Attaquant,26,Sénégalaise,185,13,65,Crystal Palace,20000000
+13,Boulaye Dia,Sénégal,Attaquant,28,Sénégalaise,180,8,23,Salernitana,12000000
+14,Pape Matar Sarr,Sénégal,Milieu,22,Sénégalaise,184,1,15,Tottenham,30000000
+15,Mohamed Salah,Égypte,Attaquant,32,Égyptienne,175,54,92,Liverpool,100000000
+16,Mohamed Elneny,Égypte,Milieu,32,Égyptienne,179,6,96,Arsenal,8000000
+17,Omar Marmoush,Égypte,Attaquant,25,Égyptienne,183,7,18,Eintracht Frankfurt,22000000
+18,Mohamed Abou Gabal,Égypte,Gardien,35,Égyptienne,189,0,8,Zamalek,2000000
+19,Ahmed Hegazi,Égypte,Défenseur,34,Égyptienne,194,9,95,Ittihad Jeddah,3000000
+20,Mostafa Mohamed,Égypte,Attaquant,26,Égyptienne,180,13,30,Nantes,15000000
+21,Trézéguet,Égypte,Milieu offensif,30,Égyptienne,178,7,66,Trabzonspor,8000000
+22,Riyad Mahrez,Algérie,Milieu offensif,33,Algérienne,179,29,88,Al-Ahli,30000000
+23,Islam Slimani,Algérie,Attaquant,36,Algérienne,188,40,100,Lens,2000000
+24,Youcef Atal,Algérie,Défenseur,28,Algérienne,176,1,28,Nice,10000000
+25,Ramy Bensebaini,Algérie,Défenseur,29,Algérienne,187,5,54,Dortmund,18000000
+26,Youcef Belaïli,Algérie,Attaquant,32,Algérienne,178,10,47,Brest,5000000
+27,Ismaël Bennacer,Algérie,Milieu,27,Algérienne,175,4,42,AC Milan,35000000
+28,Victor Osimhen,Nigeria,Attaquant,26,Nigériane,185,21,30,Napoli,120000000
+29,Samuel Chukwueze,Nigeria,Attaquant,25,Nigériane,174,4,27,AC Milan,35000000
+30,Alex Iwobi,Nigeria,Milieu,28,Nigériane,180,9,78,Fulham,28000000
+31,Wilfred Ndidi,Nigeria,Milieu défensif,27,Nigériane,183,3,62,Leicester,35000000
+32,William Troost-Ekong,Nigeria,Défenseur,31,Nigériane,193,7,69,PAOK,4000000
+33,Ademola Lookman,Nigeria,Attaquant,27,Nigériane,174,2,15,Atalanta,40000000
+34,Vincent Aboubakar,Cameroun,Attaquant,32,Camerounaise,182,37,103,Al-Nassr,8000000
+35,André Onana,Cameroun,Gardien,28,Camerounaise,190,0,38,Manchester United,45000000
+36,Bryan Mbeumo,Cameroun,Attaquant,25,Camerounaise,175,8,22,Brentford,35000000
+37,Nicolas Nkoulou,Cameroun,Défenseur,34,Camerounaise,182,2,70,Aris Thessaloniki,2000000
+38,Frank Zambo Anguissa,Cameroun,Milieu,29,Camerounaise,184,2,52,Napoli,38000000
+39,Sébastien Haller,Côte d'Ivoire,Attaquant,30,Ivoirienne,190,14,21,Dortmund,25000000
+40,Nicolas Pépé,Côte d'Ivoire,Attaquant,29,Ivoirienne,183,20,45,Trabzonspor,15000000
+41,Franck Kessié,Côte d'Ivoire,Milieu,28,Ivoirienne,183,7,53,Al-Ahli,30000000
+42,Serge Aurier,Côte d'Ivoire,Défenseur,32,Ivoirienne,176,2,78,Galatasaray,3000000
+43,Wilfried Singo,Côte d'Ivoire,Défenseur,24,Ivoirienne,179,1,18,Monaco,15000000
+44,Thomas Partey,Ghana,Milieu,31,Ghanéenne,185,13,51,Arsenal,35000000
+45,Mohammed Kudus,Ghana,Attaquant,24,Ghanéenne,177,10,28,West Ham,50000000
+46,Jordan Ayew,Ghana,Attaquant,33,Ghanéenne,182,23,103,Crystal Palace,8000000
+47,André Ayew,Ghana,Attaquant,35,Ghanéenne,176,25,119,Le Havre,2000000
+48,Alexander Djiku,Ghana,Défenseur,30,Ghanéenne,188,2,23,Fenerbahçe,12000000
+49,Amadou Onana,Belgique,Milieu,23,Sénégalaise,195,2,8,Aston Villa,55000000
+50,Percy Tau,Afrique du Sud,Attaquant,30,Sud-Africaine,169,15,38,Al-Ahly,5000000
+51,Yassine Benzia,Algérie,Milieu offensif,30,Algérienne,172,3,21,Qarabağ,3000000
+52,Youssouf Fofana,Mali,Milieu,25,Malienne,185,2,19,Monaco,35000000
+53,Ibrahima Koné,Mali,Attaquant,25,Malienne,180,12,24,Sarpsborg,3000000
+54,Wahbi Khazri,Tunisie,Attaquant,33,Tunisienne,181,25,75,Montpellier,3000000
+55,Hannibal Mejbri,Tunisie,Milieu,21,Tunisienne,179,3,12,Sevilla,15000000
+56,Patson Daka,Zambie,Attaquant,26,Zambienne,183,11,36,Leicester,20000000
+57,Cédric Bakambu,RD Congo,Attaquant,33,Congolaise,182,18,44,Bethune,3000000
+58,Chancel Mbemba,RD Congo,Défenseur,30,Congolaise,182,6,81,Marseille,8000000
+59,Yoane Wissa,RD Congo,Attaquant,28,Congolaise,175,8,23,Brentford,25000000
+60,Naby Keïta,Guinée,Milieu,29,Guinéenne,172,8,43,Werder Bremen,15000000
