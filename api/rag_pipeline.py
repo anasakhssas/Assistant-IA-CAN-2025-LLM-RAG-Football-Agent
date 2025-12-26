@@ -1,10 +1,3 @@
-"""
-Pipeline RAG (Retrieval-Augmented Generation) pour l'Assistant IA CAN 2025
-Ce module gère le stockage vectoriel et la récupération contextuelle de documents
-Auteur: [Votre Nom]
-Projet: CAN 2025 - SBI Africa
-Date: Décembre 2025"""
-
 import os
 from typing import List, Dict, Optional
 import chromadb
