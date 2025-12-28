@@ -163,6 +163,131 @@ Réponds uniquement en te basant sur les documents fournis.
 Si l'information n'est pas dans les documents, dis-le clairement."""
 
         return self.chat(query, context=context, system_prompt=system_prompt)
+    
+    def analyze_sentiment(self, text: str) -> Dict[str, any]:
+        """
+        Analyse le sentiment d'un texte (positif, négatif, neutre)
+        Utilisé pour analyser les messages de supporters sur les réseaux sociaux
+        
+        Args:
+            text: Texte à analyser (tweet, commentaire, etc.)
+            
+        Returns:
+            Dictionnaire avec sentiment et score
+        """
+        system_prompt = """Tu es un expert en analyse de sentiment pour le football.
+Analyse le sentiment du message fourni et réponds UNIQUEMENT avec un JSON au format suivant:
+{"sentiment": "positif|neutre|negatif", "score": 0.0-1.0, "explication": "courte raison"}
+
+Critères:
+- positif: Soutien, encouragement, joie, fierté
+- neutre: Information factuelle, analyse objective
+- negatif: Critique, déception, colère, frustration
+
+Score: 0.0 (très négatif) à 1.0 (très positif)"""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Analyse ce message de supporter:\n\n{text}"}
+        ]
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=0.3,  # Peu de créativité pour l'analyse
+                max_tokens=150
+            )
+            
+            result_text = response.choices[0].message.content
+            
+            # Tenter de parser le JSON
+            import json
+            try:
+                result = json.loads(result_text)
+                return result
+            except json.JSONDecodeError:
+                # Si le parsing échoue, extraire manuellement
+                if "positif" in result_text.lower():
+                    sentiment = "positif"
+                    score = 0.8
+                elif "negatif" in result_text.lower() or "négatif" in result_text.lower():
+                    sentiment = "negatif"
+                    score = 0.2
+                else:
+                    sentiment = "neutre"
+                    score = 0.5
+                
+                return {
+                    "sentiment": sentiment,
+                    "score": score,
+                    "explication": result_text
+                }
+            
+        except Exception as e:
+            return {
+                "sentiment": "erreur",
+                "score": 0.5,
+                "explication": f"Erreur d'analyse: {str(e)}"
+            }
+    
+    def recommend_content(self, user_preferences: Dict[str, any], available_content: List[Dict]) -> dict:
+        """
+        Recommande du contenu personnalisé basé sur les préférences utilisateur
+        
+        Args:
+            user_preferences: Dictionnaire avec équipes favorites, joueurs, type de contenu
+            available_content: Liste de contenus disponibles
+            
+        Returns:
+            Liste de contenus recommandés avec scores
+        """
+        # Préparer le contexte
+        prefs_text = f"""Préférences utilisateur:
+- Équipes favorites: {', '.join(user_preferences.get('favorite_teams', []))}
+- Joueurs favoris: {', '.join(user_preferences.get('favorite_players', []))}
+- Types de contenu préférés: {', '.join(user_preferences.get('content_types', ['matchs', 'résumés', 'statistiques']))}"""
+
+        content_text = "\n".join([
+            f"{i+1}. {c.get('title', 'Sans titre')} - {c.get('type', 'Contenu')} - {c.get('description', '')}"
+            for i, c in enumerate(available_content)
+        ])
+        
+        system_prompt = """Tu es un système de recommandation de contenu sportif.
+Analyse les préférences de l'utilisateur et recommande les 5 meilleurs contenus.
+Pour chaque recommandation, fournis un score de 0 à 10 et une raison courte.
+
+Format de réponse:
+1. [Titre] - Score: X/10 - Raison: ...
+2. [Titre] - Score: X/10 - Raison: ...
+etc."""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"{prefs_text}\n\nContenus disponibles:\n{content_text}"}
+        ]
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=0.5,
+                max_tokens=500
+            )
+            
+            recommendations_text = response.choices[0].message.content
+            
+            # Parser les recommandations (retourner le texte brut pour simplification)
+            return {
+                "recommendations": recommendations_text,
+                "based_on": user_preferences
+            }
+            
+        except Exception as e:
+            return {
+                "recommendations": f"Erreur lors de la recommandation: {str(e)}",
+                "based_on": user_preferences
+            }
 
 
 # Exemple d'utilisation

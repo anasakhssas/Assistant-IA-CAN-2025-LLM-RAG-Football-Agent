@@ -78,6 +78,27 @@ class StatsResponse(BaseModel):
     total_documents: int
     persist_directory: str
 
+class SentimentRequest(BaseModel):
+    """Requête pour analyse de sentiment"""
+    text: str
+
+class SentimentResponse(BaseModel):
+    """Réponse d'analyse de sentiment"""
+    sentiment: str
+    score: float
+    explication: str
+
+class RecommendationRequest(BaseModel):
+    """Requête pour recommandations personnalisées"""
+    favorite_teams: List[str] = []
+    favorite_players: List[str] = []
+    content_types: List[str] = ["matchs", "résumés", "statistiques"]
+
+class RecommendationResponse(BaseModel):
+    """Réponse avec recommandations"""
+    recommendations: str
+    based_on: dict
+
 
 # ============= Endpoints =============
 
@@ -262,6 +283,87 @@ async def search_documents(query: str, n_results: int = 3):
             "query": query,
             "results": results
         }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
+@app.post("/sentiment", response_model=SentimentResponse)
+async def analyze_sentiment(request: SentimentRequest):
+    """
+    Analyse le sentiment d'un texte (message de supporter, tweet, commentaire)
+    Retourne: positif, neutre, ou négatif avec un score
+    
+    Cas d'usage: Analyser l'opinion des supporters sur les réseaux sociaux
+    """
+    if not llm:
+        raise HTTPException(status_code=503, detail="LLM non initialisé")
+    
+    try:
+        result = llm.analyze_sentiment(request.text)
+        return SentimentResponse(**result)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
+@app.post("/recommendations", response_model=RecommendationResponse)
+async def get_recommendations(request: RecommendationRequest):
+    """
+    Génère des recommandations personnalisées de contenu
+    Basé sur les équipes favorites, joueurs favoris, et types de contenu préférés
+    
+    Cas d'usage: Recommander des matchs à suivre, vidéos, articles selon le profil utilisateur
+    """
+    if not llm:
+        raise HTTPException(status_code=503, detail="LLM non initialisé")
+    
+    if not data_manager:
+        raise HTTPException(status_code=503, detail="Data manager non initialisé")
+    
+    try:
+        # Récupérer les contenus disponibles (matchs à venir, statistiques intéressantes, etc.)
+        available_content = []
+        
+        # Ajouter les matchs des équipes favorites
+        if request.favorite_teams:
+            for team in request.favorite_teams:
+                team_matches = data_manager.get_team_matches(team)
+                for match in team_matches[:3]:  # Top 3 matchs
+                    available_content.append({
+                        "title": f"{match.get('team_a')} vs {match.get('team_b')}",
+                        "type": "match",
+                        "description": f"Phase: {match.get('stage')}, Date: {match.get('date')}",
+                        "teams": [match.get('team_a'), match.get('team_b')]
+                    })
+        
+        # Ajouter des statistiques de joueurs favoris
+        if request.favorite_players:
+            for player_name in request.favorite_players:
+                available_content.append({
+                    "title": f"Statistiques de {player_name}",
+                    "type": "statistiques",
+                    "description": f"Performance, buts, passes décisives de {player_name}"
+                })
+        
+        # Ajouter des contenus génériques si pas assez de contenu
+        if len(available_content) < 5:
+            generic_content = [
+                {"title": "Top 10 meilleurs buteurs CAN 2025", "type": "statistiques", "description": "Classement des buteurs"},
+                {"title": "Résumé des matchs d'hier", "type": "résumé", "description": "Tous les résultats de la journée"},
+                {"title": "Calendrier des quarts de finale", "type": "calendrier", "description": "Tous les matchs à venir"},
+                {"title": "Les joueurs les plus chers", "type": "statistiques", "description": "Valeur marchande des stars"},
+                {"title": "Historique des confrontations", "type": "analyse", "description": "Stats historiques entre équipes"}
+            ]
+            available_content.extend(generic_content)
+        
+        # Générer les recommandations
+        user_prefs = {
+            "favorite_teams": request.favorite_teams,
+            "favorite_players": request.favorite_players,
+            "content_types": request.content_types
+        }
+        
+        recommendations = llm.recommend_content(user_prefs, available_content)
+        return RecommendationResponse(**recommendations)
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")

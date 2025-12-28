@@ -48,6 +48,10 @@ Thumbs.db
 .streamlit/
 
 # Distribution / packaging
+
+# Documentation (ignorer tous les .md sauf README.md)
+*.md
+!README.md
 dist/
 build/
 *.egg-info/

@@ -1,88 +1,146 @@
 # 🏆 Assistant IA CAN 2025
 
-Un chatbot intelligent pour la Coupe d'Afrique des Nations 2025. Posez des questions sur les matchs, les équipes, l'historique et obtenez des résumés automatiques.
+Un assistant intelligent complet pour la Coupe d'Afrique des Nations 2025. Posez des questions, obtenez des résumés de matchs, analysez le sentiment des supporters et recevez des recommandations personnalisées.
 
-## Fonctionnalités
+## ✨ Fonctionnalités
 
-- **Chatbot Q&A** - Répondez à vos questions sur la CAN 2025
-- **Résumé de match** - Générez des résumés structurés d'articles
-- **Base RAG** - Recherche contextuelle dans une base vectorielle
+- **💬 Chatbot Q&A** - Répondez à vos questions sur la CAN 2025 avec RAG
+- **📝 Résumé de match** - Générez des résumés structurés d'articles
+- **📊 Analyse de sentiment** - Analysez l'opinion des supporters (positif/neutre/négatif)
+- **💡 Recommandations personnalisées** - Contenu adapté à vos équipes et joueurs favoris
+- **🔍 Base RAG** - Recherche contextuelle dans 126+ documents
 
-## 🧠 Fonctionnalités principales
+## 🧠 Cas d'usage détaillés
 
 ### 1. Chatbot informatif
 
 Le chatbot répond aux questions concernant:
-- Calendrier des matchs
-- Résultats
-- Classements
+- Calendrier des matchs et horaires
+- Résultats en temps réel
+- Classements des groupes
 - Informations équipes / joueurs
+- Historique de la CAN (1957-2024)
+- Statistiques détaillées
+
+**Exemples de questions:**
+- "Qui est le champion en titre?"
+- "Quel est le format de la CAN 2025?"
+- "Quelle est la valeur de Mohamed Salah?"
 
 ### 2. Résumé automatique de match
 
-À partir d'un texte brut, le modèle génère un résumé structuré, compatible social media.
+À partir d'un texte brut (article, rapport), génère un résumé structuré:
+- Score final et buteurs
+- Moments clés du match
+- Déclarations importantes
+- Format adapté aux réseaux sociaux
 
 ### 3. Analyse de sentiment
 
-Analyse des messages supporters pour déterminer:
-- positif
-- neutre
-- négatif
+Analyse des messages supporters (tweets, commentaires) pour déterminer:
+- **Positif** 😊 - Joie, fierté, enthousiasme
+- **Neutre** 😐 - Observation factuelle
+- **Négatif** 😞 - Déception, frustration
 
-### 4. Recommandation personnalisée
+Inclut un score de confiance (0.0-1.0) et une explication détaillée.
 
-Suggestions de matchs, contenus vidéos, statistiques selon le profil utilisateur.
+### 4. Recommandations personnalisées
 
-## Architecture
+Suggestions de contenu basées sur:
+- Équipes favorites (Maroc, Sénégal, Égypte, etc.)
+- Joueurs favoris (Salah, Mané, Hakimi, etc.)
+- Types de contenu (matchs, statistiques, analyses, vidéos)
+
+Recommandations intelligentes avec explications de pertinence.
+
+## 🎯 Architecture
 
 ```
-Streamlit (Frontend) → FastAPI (Backend) → RAG Pipeline → ChromaDB + Groq LLM
+┌─────────────────────────────────────────┐
+│      Frontend (Streamlit)               │
+│  - 5 onglets: Chatbot, Résumé,          │
+│    Sentiment, Recommandations, Guide    │
+│  - Interface responsive et intuitive    │
+└──────────────┬──────────────────────────┘
+               │ HTTP/REST API
+               ▼
+┌─────────────────────────────────────────┐
+│       Backend (FastAPI)                 │
+│  - 9 endpoints REST                     │
+│  - Validation Pydantic                  │
+│  - Gestion d'erreurs robuste            │
+└──────────┬──────────────────────────────┘
+           │
+           ├─────────────┬─────────────┐
+           ▼             ▼             ▼
+    ┌──────────┐  ┌──────────┐  ┌──────────┐
+    │   LLM    │  │   RAG    │  │   Data   │
+    │(Groq API)│  │(ChromaDB)│  │ Manager  │
+    │LLaMA 3.3 │  │126+ docs │  │9 CSV files│
+    └──────────┘  └──────────┘  └──────────┘
 ```
 
 ## 🔧 Technologies utilisées
 
-| Domaine | Outils |
-|---------|--------|
-| Backend API | FastAPI 0.109 |
-| LLM | Groq LLaMA 3.3 70B (Gratuit!) |
-| RAG | ChromaDB + Sentence Transformers |
-| Vector Store | ChromaDB 0.4.22 |
-| Frontend | Streamlit 1.31 |
-| Dev | Python 3.11 |
-| Documentation | Markdown |
+| Domaine | Outils | Version |
+|---------|--------|---------|
+| Backend API | FastAPI | 0.109 |
+| LLM | Groq (LLaMA 3.3 70B) | Gratuit! |
+| RAG | ChromaDB | 0.4.22 |
+| Embeddings | Sentence Transformers | all-MiniLM-L6-v2 |
+| Frontend | Streamlit | 1.31 |
+| Python | Python | 3.11+ |
+| Vector Store | ChromaDB PersistentClient | Local |
+| HTTP Client | Requests | Latest |
 
 ## 📂 Structure du projet
 
 ```
-project/
-│Technologies
-
-- **Backend**: FastAPI
-- **LLM**: Groq (LLaMA 3.3 - gratuit)
-- **RAG**: ChromaDB + Sentence Transformers
-- **Frontend**: Streamlit
-- **Python**: 3.11+
-│   ├── llm_interface.py
-│   └── sentiment_model.py
+├── api/
+│   ├── main.py              # FastAPI app avec 9 endpoints
+│   ├── rag_pipeline.py      # Pipeline RAG avec ChromaDB
+│   └── data_manager.py      # Gestion des données CSV
+│
+├── models/
+│   ├── llm_interface.py     # Interface LLM (Groq/OpenAI)
+│   │   - chat()             # Chatbot
+│   │   - summarize_match()  # Résumé
+│   │   - analyze_sentiment() # Sentiment (NOUVEAU)
+│   │   - recommend_content() # Recommandations (NOUVEAU)
 │
 ├── frontend/
-│   └── app.py
+│   └── app.py               # Interface Streamlit (5 onglets)
 │
-├── vectorstore/
-│   └── index/
+├── data/
+│   ├── csv/                 # 9 fichiers CSV (matchs, équipes, etc.)
+│   ├── historique/          # champions.md, records.md
+│   ├── equipes/             # senegal.md, maroc.md, egypte.md
+│   ├── joueurs/             # mohamed_salah.md
+│   └── competition/         # format.md
 │
-└── README.md
-```
+├── 💬 Q&R Football
+**Question:** "Qui a gagné Maroc vs Sénégal et quel était le score ?"  
+**Réponse:** Utilise RAG pour chercher dans la base et répond avec contexte.
 
-## 🧪 Scénarios d'usage
+### 📝 Résumé Match
+**Input:** Article long de 500 mots sur un match  
+**Output:** Résumé structuré en 100 mots avec score, buteurs, moments clés
 
+### 📊 Sentiment Supporters
+**Input:** "Incroyable victoire ! Fier d'être Marocain ! 🇲🇦⚽🏆"  
+**Output:** Sentiment: Positif (Score: 0.95) - Message enthousiaste exprimant fierté
+
+### 💡 Recommandations
+**Profil:** Équipes favorites: Maroc, Sénégal | Joueurs: Hakimi, Mané  
+**Output:** Top 5 contenus recommandés avec scores de pertinence
 ### Q&R football
-"Qui a gagné Maroc vs Sénégal et quel était le score ?"
+"Quit
 
-### Résumé match
-"Résume-moi le match de l'Algérie en 100 mots."
-
-### Sentiment supporters
+### 1. Cloner le repo
+```bash
+git clone <repo-url>
+cd Intelligence-Artificielle-LLM-Assistant-intelligent-CAN-2025-
+```t supporters
 "Analyse le ton global des tweets des supporters marocains."
 
 ### Recommandation
